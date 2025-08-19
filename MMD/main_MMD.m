@@ -1,0 +1,59 @@
+%% Assumptions and Notes
+% Gift from DUO
+% This helps understand the effects of track width and wheelbase by plotting the Milliken Diagram (Yaw-Moment)
+% Two variants will be used.
+% Variant 1: Open‑loop chassis property (δ = 0): “What yaw moment does the tire system produce at a given ay if the wheels are held straight?”
+% Variant 2: Ackermann (δ = L/R): “What residual yaw moment remains if you steer just the geometric amount?”
+% This model uses a simple 4 wheel model that takes into account load transfer.
+% This model assumes parallel steer ie front slip angles are the same.
+% This model assumes linear, load sensitive tires. I acknowledge 
+% This model assumes constant speed
+clc; close all; clear;
+
+% --- Vehicle & tire parameters (edit to your car) ---
+p = vehicle_params();
+
+% Speed (constant per paper's construction)
+p.Ux = 20;                 % [m/s] ~72 km/h (set what you want)
+p.mu = 1.6;                % road/tire friction cap
+p.g  = 9.81;
+
+% Grids (ensure wide enough deltas to get full "diamond")
+beta_vec  = deg2rad(linspace(-12, 18, 61));   % sideslip [rad]
+delta_vec = deg2rad(linspace(-40, 40, 81));   % steer   [rad]
+
+% Optional longitudinal slips (front, rear). Set to 0 for pure MMD.
+kappa_f = 0.0;
+kappa_r = 0.0;
+
+% --- Build MMD surface: For each (beta, delta) solve steady-state lateral dynamics
+[Ay, N, CN, beta_grid, delta_grid] = build_mmd(p, beta_vec, delta_vec, kappa_f, kappa_r);
+
+% --- Plot MMD in g vs CN (paper’s axes). Also plot unnormalized N vs Ay if you prefer.
+figure('Name','Moment Method Diagram'); hold on; grid on;
+% Steering isolines
+for j = 1:numel(delta_vec)
+    plot(Ay(:,j)/p.g, CN(:,j), 'LineWidth', 1.2);
+end
+xlabel('Lateral acceleration A_y / g');
+ylabel('Normalized yaw moment C_N = N / (m g (l_f + l_r))');
+title(sprintf('MMD at U_x = %.1f m/s', p.Ux));
+
+% --- Beta Method (project N across delta at each beta) ---
+[Nmax_beta, Nmin_beta] = build_beta(N, beta_grid, delta_grid);
+figure('Name','Beta Method'); hold on; grid on;
+plot(rad2deg(beta_vec), Nmax_beta, 'LineWidth', 1.8);
+plot(rad2deg(beta_vec), Nmin_beta, 'LineWidth', 1.8);
+xlabel('\beta [deg]'); ylabel('Yaw moment N [N·m]');
+title('Beta Method (Envelope of N vs \beta across \delta)');
+legend('N_{max}(\beta)','N_{min}(\beta)','Location','Best');
+
+% --- (Optional) Show same Beta plot in normalized yaw moment if desired ---
+CNmax_beta = Nmax_beta ./ (p.m * p.g * (p.lf + p.lr));
+CNmin_beta = Nmin_beta ./ (p.m * p.g * (p.lf + p.lr));
+figure('Name','Beta Method (normalized)'); hold on; grid on;
+plot(rad2deg(beta_vec), CNmax_beta, 'LineWidth', 1.8);
+plot(rad2deg(beta_vec), CNmin_beta, 'LineWidth', 1.8);
+xlabel('\beta [deg]'); ylabel('C_N [-]');
+title('Beta Method (Envelope of C_N vs \beta)');
+legend('C_{N,max}(\beta)','C_{N,min}(\beta)','Location','Best');
