@@ -1,4 +1,4 @@
-function overlay_MMD_ratio(L_over_t_vec, L_ref)
+function overlay_MMD_sweep(L_over_t_vec, L_ref)
 % overlay_MMD_ratio — overlay MMD envelopes for different L/t ratios
 %
 % Inputs:
