@@ -16,7 +16,7 @@ for rho = ratio(:).'
     if isfield(p,'tf'),  p.tf  = t; else, p.tfw = t; end
     if isfield(p,'tr'),  p.tr  = t; else, p.trw = t; end
 
-    beta_vec  = deg2rad(linspace(-6, 6, 61));   % [rad]
+    beta_vec  = deg2rad(linspace(-10, 10, 61));   % [rad]
     delta_vec = deg2rad(linspace(-10, 10, 81));   % [rad]
     [Ay, N]   = build_mmd(p, beta_vec, delta_vec, 0, 0);
 

@@ -48,6 +48,6 @@ p.maxIter = 60;
 p.tol     = 1e-6;
 
 % Speed placeholder (set in main)
-p.Ux = 11;           % m/s (overwritten in main)
+p.Ux = 11;           % m/s (overwritten in main but use only for overlay_MMD_sweep.m)
 
 end

@@ -11,8 +11,8 @@ p.Ux = 11;                % [m/s] constant speed for the MMD
 p.g  = 9.80665;           % gravity (for ay in g)
 
 % sweeps (wide enough to reach envelope; tune to your car)
-beta_vec  = deg2rad(linspace(-12, 18, 61));   % [rad]
-delta_vec = deg2rad(linspace(-40, 40, 81));   % [rad]
+beta_vec  = deg2rad(linspace(-20, 20, 61));   % [rad]
+delta_vec = deg2rad(linspace(-20, 20, 81));   % [rad]
 
 % (optional) longitudinal slips for combined-slip model
 kappa_f = 0.0;            % front
