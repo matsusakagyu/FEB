@@ -5,7 +5,7 @@ This helps understand the effects of vehicle paramters through the Milliken Mome
 
 Credit: This uses the methods found in "Vehicle agile maneuvering: From rally drivers to a finite state machine approach" by Acosta, M, Kanarachos, S & Blundell, M. Chat GPT helped with some of my code lol
 
-How it works: Please read the paper above. A .pdf can be found in the MMD folder as well (vehicle_agile_maneuveringv4.pdf).
+How it works: Please read the paper above. A .pdf can be found in the MMD folder as well (vehicle_agile_maneuveringv4.pdf). The Magic Formula shape F=Dsin(Carctan(Bx−E(Bx−arctanBx))) was used instead.
 
 Instructions: Run main_MMD.m to get a Milliken Moment Diagram (MMD). You can change vehicle paramters in the vehicle_params.m. You can also run overlay_MMD_sweep.m to sweep through wheelbase and track ratios to plot the envelope. You can simply call overlay_MMD_sweep(rhoL_vec, rhoT_vec) to sweep through both values. rhoL_vec and rhoT_vec is a 1xn vector of sweept values. If you want to fix track or wheel base, just input a singular number. Wider envelope means car can generate more lateral acceleration before saturation → more grip (tires, downforce, load transfer, etc.). Taller envelope means car can produce larger corrective yaw moments → higher agility (ability to rotate into a corner).
 
