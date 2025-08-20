@@ -1,6 +1,6 @@
 %% Assumptions and Notes
 % Gift from DUO
-% This helps understand the effects of track width and wheelbase by plotting the Milliken Diagram (Yaw-Moment)
+% This helps understand the effects of track width and wheelbase by plotting the Milliken Moment Diagram (Yaw-Moment)
 % This uses the methods found in "Vehicle agile maneuvering: From rally drivers to a finite state machine approach" by Acosta, M, Kanarachos, S & Blundell, M
 
 clc; close all;
