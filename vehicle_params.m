@@ -23,6 +23,23 @@ p.Ca_ref = 80000;    % N/rad (per tire at Fz_ref)  (adjust for your tires)
 p.Ck_ref = 80000;    % N     (longitudinal “stiffness” scale for Fx model)
 p.load_exp = 0.9;    % load sensitivity exponent for stiffness
 
+% --- Pacejka Magic Formula (example values; tune to your tire data) ---
+% Lateral (alpha)
+p.pacejka_lat.B = 11;     % stiffness factor
+p.pacejka_lat.C = 1.9;      % shape factor
+p.pacejka_lat.D = 1.00;     % peak factor (multiplies Fz inside MF)
+p.pacejka_lat.E = 0.97;     % curvature factor
+
+% Longitudinal (kappa)
+p.pacejka_long.B = 12.0;
+p.pacejka_long.C = 1.9;
+p.pacejka_long.D = 1.00;
+p.pacejka_long.E = 1.00;
+
+% Global friction cap (used by ellipse scaling)
+p.mu = 1.6;
+
+
 % Friction
 p.mu = 1.2;          % peak friction cap (scale both Fy and Fx saturation)
 
@@ -32,4 +49,5 @@ p.tol     = 1e-6;
 
 % Speed placeholder (set in main)
 p.Ux = 20;           % m/s (overwritten in main)
+
 end

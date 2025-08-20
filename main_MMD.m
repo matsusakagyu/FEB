@@ -44,7 +44,7 @@ title('Moment Method Diagram (MMD)');
 beta_line_color = 'k';       % black
 beta_line_style = '-';       % solid
 beta_line_width = 1.2;       % thicker than default
-beta_levels = -5:1:5;      % label values [deg]
+beta_levels = -10:1:10;      % label values [deg]
 
 [C_beta,h_beta] = contour(Ay, N, beta_grid*180/pi, beta_levels, ...
     'LineColor', beta_line_color, ...
@@ -58,7 +58,7 @@ clabel(C_beta, h_beta, 'Color', beta_line_color, ...
 delta_line_color = 'r';      % red
 delta_line_style = '--';     % dashed
 delta_line_width = 1.2;
-delta_levels = -5:1:5;     % label values [deg]
+delta_levels = -10:1:10;     % label values [deg]
 
 [C_delta,h_delta] = contour(Ay, N, delta_grid*180/pi, delta_levels, ...
     'LineColor', delta_line_color, ...

@@ -17,10 +17,10 @@ for k = 1:p.maxIter
     [Fz_fl, Fz_fr, Fz_rl, Fz_rr] = vertical_loads(p, Ay_k, kappa);
 
     % Tire forces (combined slip saturation)
-    [Fy_fl, Fx_fl] = tire_forces_combined(p, Fz_fl, alpha_fl, kappa_f);
-    [Fy_fr, Fx_fr] = tire_forces_combined(p, Fz_fr, alpha_fr, kappa_f);
-    [Fy_rl, Fx_rl] = tire_forces_combined(p, Fz_rl, alpha_rl, kappa_r);
-    [Fy_rr, Fx_rr] = tire_forces_combined(p, Fz_rr, alpha_rr, kappa_r);
+    [Fy_fl, Fx_fl] = tire_forces_combined_pacejka(p, Fz_fl, alpha_fl, kappa_f);
+    [Fy_fr, Fx_fr] = tire_forces_combined_pacejka(p, Fz_fr, alpha_fr, kappa_f);
+    [Fy_rl, Fx_rl] = tire_forces_combined_pacejka(p, Fz_rl, alpha_rl, kappa_r);
+    [Fy_rr, Fx_rr] = tire_forces_combined_pacejka(p, Fz_rr, alpha_rr, kappa_r);
 
     % Sum lateral force per axle (front multiplied by cos(delta))
     Fyf = (Fy_fl + Fy_fr) * cos(delta);
