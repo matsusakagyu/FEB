@@ -27,55 +27,55 @@ kappa_r = 0.0;            % rear
 Ay_g = Ay / p.g;          % lateral acceleration in g (x-axis)
 CN_map = CN;              % normalized yaw moment (y-axis)
 
-%% PLOT: base steering isolines + labeled iso-β and iso-δ
-figure('Color','w'); hold on; grid on; box on;
+%% -------- Plotting Section --------
+figure; hold on; grid on;
 
-% --- Base: steering isolines (each column is a fixed δ, varying β) ---
-cmap = lines(numel(delta_vec));      % or any colormap you prefer
-for j = 1:numel(delta_vec)
-    plot(Ay_g(:,j), CN_map(:,j), 'Color',[0.5 0.5 0.5], 'LineWidth', 1.0); % light gray lines
-end
+% === Filled background ===
+% This is the yaw moment coefficient map (CN)
+contourf(Ay, N, CN, 20, 'LineStyle','none'); 
+colormap(turbo); 
+colorbar;
+xlabel('a_y [m/s^2]'); 
+ylabel('C_N (yaw moment coeff.)');
+title('Moment Method Diagram (MMD)');
 
-% --- Prepare fields for contour labeling ---
-beta_deg  = beta_grid  * 180/pi;     % Z field for iso-β contours (deg)
-delta_deg = delta_grid * 180/pi;     % Z field for iso-δ contours (deg)
+% === Iso-beta lines ===
+% Style controls (change here to update appearance)
+beta_line_color = 'k';       % black
+beta_line_style = '-';       % solid
+beta_line_width = 1.2;       % thicker than default
+beta_levels = -5:1:5;      % label values [deg]
 
-% Choose which β and δ levels to label (deg)
-beta_levels_deg  = (-12:3:18);       % adjust density for readability
-delta_levels_deg = (-40:5:40);
+[C_beta,h_beta] = contour(Ay, N, beta_grid*180/pi, beta_levels, ...
+    'LineColor', beta_line_color, ...
+    'LineStyle', beta_line_style, ...
+    'LineWidth', beta_line_width);
+clabel(C_beta, h_beta, 'Color', beta_line_color, ...
+    'FontSize', 8, 'LabelSpacing', 400);
 
-% --- Iso-β contours (solid black) with labels ---
-[Cb,hb] = contour(Ay_g, CN_map, beta_deg, beta_levels_deg, ...
-                  'LineColor', [0 0 0], 'LineStyle','-', 'LineWidth', 0.9);
-htb = clabel(Cb, hb, 'LabelSpacing', 300, 'FontSize', 8, 'Color', [0 0 0]);
-% Prefix labels with β=
-for k = 1:numel(htb)
-    set(htb(k), 'String', ['\beta=', htb(k).String, '^{\circ}'], ...
-        'BackgroundColor','w', 'Margin', 2, 'Interpreter','tex');
-end
+% === Iso-delta lines ===
+% Style controls
+delta_line_color = 'r';      % red
+delta_line_style = '--';     % dashed
+delta_line_width = 1.2;
+delta_levels = -5:1:5;     % label values [deg]
 
-% --- Iso-δ contours (dashed red) with labels ---
-[Cd,hd] = contour(Ay_g, CN_map, delta_deg, delta_levels_deg, ...
-                  'LineColor', [0.85 0 0], 'LineStyle','--', 'LineWidth', 0.9);
-htd = clabel(Cd, hd, 'LabelSpacing', 300, 'FontSize', 8, 'Color', [0.85 0 0]);
-for k = 1:numel(htd)
-    set(htd(k), 'String', ['\delta=', htd(k).String, '^{\circ}'], ...
-        'BackgroundColor','w', 'Margin', 2, 'Interpreter','tex');
-end
+[C_delta,h_delta] = contour(Ay, N, delta_grid*180/pi, delta_levels, ...
+    'LineColor', delta_line_color, ...
+    'LineStyle', delta_line_style, ...
+    'LineWidth', delta_line_width);
+clabel(C_delta, h_delta, 'Color', delta_line_color, ...
+    'FontSize', 8, 'LabelSpacing', 400);
 
-% Axis labels & title
-xlabel('Lateral acceleration a_y  [g]');
-ylabel('Normalized yaw moment C_N = N / (m g (l_f + l_r))');
-title(sprintf('Moment Method Diagram (U_x = %.1f m/s)', p.Ux));
+% === Legend ===
+legend([h_beta(1), h_delta(1)], ...
+       {'\beta [deg]','\delta [deg]'}, ...
+       'Location','best');
 
-% Legend (proxies)
-plot(nan,nan,'-','Color',[0 0 0],'LineWidth',0.9); 
-plot(nan,nan,'--','Color',[0.85 0 0],'LineWidth',0.9);
-legend({'steering isolines','iso-\beta','iso-\delta'}, 'Location','best');
 
 % Optional: tidy limits
-xlim([min(Ay_g(:)) max(Ay_g(:))]); 
-ylim([min(CN_map(:)) max(CN_map(:))]);
+%xlim([min(Ay_g(:)) max(Ay_g(:))]); 
+%ylim([min(CN_map(:)) max(CN_map(:))]);
 
 %{
 % --- Beta Method (project N across delta at each beta) ---
