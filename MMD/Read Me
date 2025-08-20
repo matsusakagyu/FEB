@@ -1,9 +1,0 @@
-READ ME
-
-Gift from DUO
-This helps understand the effects of track width and wheelbase by plotting the Milliken Diagram (Yaw-Moment)
-This uses the methods found in "Vehicle agile maneuvering: From rally drivers to a finite state machine approach" by Acosta, M, Kanarachos, S & Blundell, M
-
-Instructions: Run main_MMD.m to get a Milliken Moment Diagram (MMD). You can change vehicle paramters in the vehicle_params.m.
-
-Please note that Track_and_Wheelbase.m, solve_point.m, and build_diamond.m aren't used in main_MMD.m and are old code.
