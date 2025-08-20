@@ -1,4 +1,4 @@
-function [Ay, N, CN, beta_grid, delta_grid] = build_mmd(p, beta_vec, delta_vec, kappa_f, kappa_r)
+function [Ay, N, CN, beta_grid, delta_grid, Ay_g] = build_mmd(p, beta_vec, delta_vec, kappa_f, kappa_r)
 nb = numel(beta_vec); nd = numel(delta_vec);
 Ay = nan(nb, nd);
 N  = nan(nb, nd);
@@ -14,7 +14,10 @@ for ib = 1:nb
         [Ay_ij, N_ij] = solve_point_2(p, beta, delta, kappa_f, kappa_r);
         Ay(ib,jd) = Ay_ij;
         N(ib,jd)  = N_ij;
-        CN(ib,jd) = N_ij / (p.m * p.g * (p.lf + p.lr));  % Eq. (1) in the paper
+    
+        L = p.lf + p.lr;           % wheelbase (for CN scaling)
+        CN(ib,jd)   = N_ij / (p.m * p.g * L);
+        Ay_g(ib,jd) = Ay_ij / p.g; % lateral g's
     end
 end
 end

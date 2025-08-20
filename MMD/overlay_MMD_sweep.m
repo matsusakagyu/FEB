@@ -1,49 +1,28 @@
-function overlay_MMD_sweep(L_over_t_vec, L_ref)
-% overlay_MMD_ratio — overlay MMD envelopes for different L/t ratios
-%
-% Inputs:
-%   L_over_t_vec - vector of wheelbase/track ratios to sweep (e.g. 1.2:0.2:2.0)
-%   L_ref        - reference wheelbase to hold constant (m)
-%
-% Example:
-%   overlay_MMD_ratio([1.4 1.6 1.8], 1.5)
+function overlay_MMD_sweep(ratio, L_ref)
+% Overlay raw MMD envelopes sweeping the geometry ratio (L/t) at fixed L_ref.
 
-% --- baseline vehicle ---
-p0 = vehicle_params();
-g = 9.81;
+p0  = vehicle_params();
+L   = L_ref;
 
-% --- sweep ---
-figure; hold on; grid on;
-xlabel('a_y / g [-]'); ylabel('C_N = N / (m g L) [-]');
-title('Normalized MMD Envelopes, swept L/t ratio');
+figure('Color','w'); hold on; grid on; box on;
+xlabel('a_y  [m/s^2]'); ylabel('C_{N}  [N·m]');
+title(sprintf('MMD Envelopes (raw), L fixed at %.2f m; varying L/t', L_ref));
 
-for rho = L_over_t_vec
-    % Fix L at reference, compute t from ratio
-    L  = L_ref;
-    tF = L / rho;  % front track
-    tR = L / rho;  % rear track (assume symmetric)
-    lf = p0.lf / (p0.lf+p0.lr) * L;  % keep same CG position fraction
-    lr = L - lf;
+for rho = ratio(:).'
+    t   = L / rho;           % track from desired L/t
+    lf  = p0.lf;  lr = p0.lr;
 
-    % Update vehicle struct
-    p = p0; 
-    p.L=L; p.lf=lf; p.lr=lr;
-    p.tfw=tF; p.trw=tR;
+    p = p0; p.L = L; p.lf = lf; p.lr = lr;
+    if isfield(p,'tf'),  p.tf  = t; else, p.tfw = t; end
+    if isfield(p,'tr'),  p.tr  = t; else, p.trw = t; end
 
-    % Build MMD
-    beta_vec  = linspace(-0.2,0.2,25);
-    delta_vec = linspace(-0.3,0.3,25);
-    [Ay, N, ~, ~, ~] = build_mmd(p, beta_vec, delta_vec, 0, 0);
+    beta_vec  = deg2rad(linspace(-6, 6, 61));   % [rad]
+    delta_vec = deg2rad(linspace(-10, 10, 81));   % [rad]
+    [Ay, N]   = build_mmd(p, beta_vec, delta_vec, 0, 0);
 
-    % Normalize
-    Ay_norm = Ay / g;
-    CN      = N ./ (p.m * g * L);
-
-    % Outer envelope (convex hull)
-    pts = [Ay_norm(:), CN(:)];
-    K = convhull(pts(:,1), pts(:,2));
-    plot(pts(K,1), pts(K,2), 'DisplayName', sprintf('L/t = %.2f', rho));
+    K = convhull(Ay(:), N(:));
+    plot(Ay(K), N(K), 'LineWidth', 1.8, 'DisplayName', sprintf('L/t = %.2f', rho));
 end
 
-legend show;
+legend('Location','best'); axis tight; axis square;
 end

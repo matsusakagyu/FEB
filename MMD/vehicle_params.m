@@ -1,16 +1,16 @@
 function p = vehicle_params()
 % Vehicle geometry (edit to your car)
-p.m  = 1500;          % kg
-p.lf = 1.25;         % m
-p.lr = 1.35;         % m   (L = lf+lr = 1.50 m)
-p.tfw = 1.50;        % m   front track
-p.trw = 1.50;        % m   rear track
-p.hCG = 0.5;        % m   CG height
-p.Iz  = 2500;         % kg·m^2 (not used in steady-state MMD calc)
+p.m  = 236.988 + 68;          % kg
+p.lf = 3.073 * 0.535;         % m
+p.lr = 3.073 - p.lf;         % m   (L = lf+lr = 1.50 m)
+p.tfw = 1.220;        % m   front track
+p.trw = 1.234;        % m   rear track
+p.hCG = 0.273;        % m   CG height
+p.Iz  = 500;         % kg·m^2 (not used in steady-state MMD calc)
 
 % Roll stiffness distribution (for lateral load transfer split)
-p.kphi_f = 1100;     % N·m/rad
-p.kphi_r = 700;     % N·m/rad
+p.kphi_f = 22918.3;     % N·m/rad
+p.kphi_r = 20053.5;     % N·m/rad
 
 % Static verticals
 p.g  = 9.81;
@@ -25,19 +25,19 @@ p.load_exp = 0.9;    % load sensitivity exponent for stiffness
 
 % --- Pacejka Magic Formula (example values; tune to your tire data) ---
 % Lateral (alpha)
-p.pacejka_lat.B = 11;     % stiffness factor
-p.pacejka_lat.C = 1.9;      % shape factor
-p.pacejka_lat.D = 1.00;     % peak factor (multiplies Fz inside MF)
-p.pacejka_lat.E = 0.97;     % curvature factor
+p.pacejka_lat.B = 23.5;     % stiffness factor
+p.pacejka_lat.C = 1.4;      % shape factor
+p.pacejka_lat.D = 1.45;     % peak factor (multiplies Fz inside MF)
+p.pacejka_lat.E = 0.9;     % curvature factor
 
 % Longitudinal (kappa)
-p.pacejka_long.B = 12.0;
-p.pacejka_long.C = 1.9;
-p.pacejka_long.D = 1.00;
-p.pacejka_long.E = 1.00;
+p.pacejka_long.B = 15.0;
+p.pacejka_long.C = 1.8;
+p.pacejka_long.D = 1.40;
+p.pacejka_long.E = 0.95;
 
 % Global friction cap (used by ellipse scaling)
-p.mu = 1.6;
+p.mu = 1.4;
 
 
 % Friction
@@ -48,6 +48,6 @@ p.maxIter = 60;
 p.tol     = 1e-6;
 
 % Speed placeholder (set in main)
-p.Ux = 20;           % m/s (overwritten in main)
+p.Ux = 11;           % m/s (overwritten in main)
 
 end

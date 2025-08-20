@@ -7,7 +7,7 @@ clc; close all;
 
 %% Parameters
 p = vehicle_params();     % your vehicle struct
-p.Ux = 20;                % [m/s] constant speed for the MMD
+p.Ux = 11;                % [m/s] constant speed for the MMD
 p.g  = 9.80665;           % gravity (for ay in g)
 
 % sweeps (wide enough to reach envelope; tune to your car)
@@ -21,18 +21,14 @@ kappa_r = 0.0;            % rear
 %% Build MMD surface
 % Ay [nb x nd] in m/s^2, N [nb x nd] in N*m, CN normalized,
 % and the β/δ grids (same size as Ay/CN).
-[Ay, N, CN, beta_grid, delta_grid] = build_mmd(p, beta_vec, delta_vec, kappa_f, kappa_r);
-
-% axes variables
-Ay_g = Ay / p.g;          % lateral acceleration in g (x-axis)
-CN_map = CN;              % normalized yaw moment (y-axis)
+[Ay, N, CN, beta_grid, delta_grid, Ay_g] = build_mmd(p, beta_vec, delta_vec, kappa_f, kappa_r);
 
 %% -------- Plotting Section --------
 figure; hold on; grid on;
 
 % === Filled background ===
 % This is the yaw moment coefficient map (CN)
-contourf(Ay, N, CN, 20, 'LineStyle','none'); 
+contourf(Ay_g, CN, CN, 20, 'LineStyle','none'); 
 colormap(turbo); 
 colorbar;
 xlabel('a_y [m/s^2]'); 
@@ -44,9 +40,9 @@ title('Moment Method Diagram (MMD)');
 beta_line_color = 'k';       % black
 beta_line_style = '-';       % solid
 beta_line_width = 1.2;       % thicker than default
-beta_levels = -10:1:10;      % label values [deg]
+beta_levels = -20:1:20;      % label values [deg]
 
-[C_beta,h_beta] = contour(Ay, N, beta_grid*180/pi, beta_levels, ...
+[C_beta,h_beta] = contour(Ay_g, CN, beta_grid*180/pi, beta_levels, ...
     'LineColor', beta_line_color, ...
     'LineStyle', beta_line_style, ...
     'LineWidth', beta_line_width);
@@ -58,9 +54,9 @@ clabel(C_beta, h_beta, 'Color', beta_line_color, ...
 delta_line_color = 'r';      % red
 delta_line_style = '--';     % dashed
 delta_line_width = 1.2;
-delta_levels = -10:1:10;     % label values [deg]
+delta_levels = -20:1:20;     % label values [deg]
 
-[C_delta,h_delta] = contour(Ay, N, delta_grid*180/pi, delta_levels, ...
+[C_delta,h_delta] = contour(Ay_g, CN, delta_grid*180/pi, delta_levels, ...
     'LineColor', delta_line_color, ...
     'LineStyle', delta_line_style, ...
     'LineWidth', delta_line_width);
@@ -71,6 +67,8 @@ clabel(C_delta, h_delta, 'Color', delta_line_color, ...
 legend([h_beta(1), h_delta(1)], ...
        {'\beta [deg]','\delta [deg]'}, ...
        'Location','best');
+
+%xlim([-1.1, 1.1]); ylim([-1.1, 1.1]);
 
 
 % Optional: tidy limits
